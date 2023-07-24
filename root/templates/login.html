@@ -1,7 +1,8 @@
+{% load static %}
 <!doctype html>
 <html lang="en">
   <head>
-  	<title>Login 10</title>
+  	<title>Sign In - Certificate</title>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
@@ -9,10 +10,12 @@
 
 	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
 	
-	<link rel="stylesheet" href="css/style.css">
+	<link rel="stylesheet" href="{% static 'css/style.css' %}">
 
 	</head>
-	<body class="img js-fullheight" style="background-image: url(images/bg.jpg);">
+	<body class="img js-fullheight" style="background-image: url({% static 'images/bg.jpg' %});">
+	<a href="{% url 'home' %}">Go to Home</a>
+	<h1>{{method}}</h1>
 	<section class="ftco-section">
 		<div class="container">
 			<div class="row justify-content-center">
@@ -24,7 +27,8 @@
 				<div class="col-md-6 col-lg-4">
 					<div class="login-wrap p-0">
 		      	<h3 class="mb-4 text-center">Have an account?</h3>
-		      	<form action="#" class="signin-form">
+		      	<form action="{% url 'login' %}" method='POST' class="signin-form">
+					{% csrf_token %}
 		      		<div class="form-group">
 		      			<input type="text" class="form-control" placeholder="Username" required>
 		      		</div>
