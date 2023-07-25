@@ -2,11 +2,12 @@ from django.shortcuts import render, HttpResponse, redirect
 from django.http import request
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import login, logout, authenticate
-from .forms import authform
-from .models import User
+from .forms import authform, certificate_form, certificate_id_form
+from .models import User, certificate_model
 from django.db.utils import IntegrityError
+import uuid
 
-# authentication
+#!++++++++++++++++++++++++++++++++++++++++---  AUTHENTICATION VIEWS ----++++++++++++++++++++++++++++++++++++++++++++++++++++++
 def login_view(request):
 
     if request.method == "POST":
@@ -44,11 +45,34 @@ def signin(request):
 
     return render(request, 'signin.html')
 
-#!+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
-# Certificate
+#!++++++++++++++++++++++++++++++++++++++++---  CERTIFICATE VIEWS ----+++++++++++++++++++++++++++++++++++++++
+
 @login_required
 def home(request):
     return render(request, 'index.html')
 
 
+def certificate(request):
+
+    if request.method == "POST":
+        form = certificate_form(request.POST)
+        if form.is_valid():
+            name = form.cleaned_data['name']
+            signed_by = form.cleaned_data['signed_by']
+            certificate_id = uuid.uuid4()
+            cert = certificate_model(name=name, signed_by=signed_by, certificate_id=certificate_id)
+            cert.save()
+            return render(request, 'certificate.html', {'message':'certificate Succesfully created',
+                                                        'certificate_id':certificate_id})
+        else:
+            return render(request, 'certificate.html', {'message':'some error occured'})
+
+    return render(request, 'certificate.html')
+
+def validate(request):
+
+    if request.method == 'GET':
+        id = request.GET.get('certificate_id', False)
+    
+    return render(request, 'validate.html', {'message':id})
