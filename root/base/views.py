@@ -6,26 +6,20 @@ from .forms import authform
 from .models import User
 from django.db.utils import IntegrityError
 
-@login_required
-def home(request):
-    return render(request, 'index.html')
-
+# authentication
 def login_view(request):
 
     if request.method == "POST":
         username = request.POST['username']
         password = request.POST['password']
         user = authenticate(request, username=username, password=password)
-        
         if user is not None:
             login(request, user)
             return redirect(home)
         else:
-            return render(request, 'login.html', {'method':request.method,
-                                              'user':username,
-                                              'pass':password })
+            return render(request, 'login.html', {'message':'Invalid user or password'})
     else:
-        return render(request, 'login.html', {'method':request.method})
+        return render(request, 'login.html')
 
 
 def logout_view(request):
@@ -44,9 +38,17 @@ def signin(request):
             login(request, user)
             return redirect(home)
         except IntegrityError:
-            return render(request, 'signin.html', {'message':"username already exist"})
+            return render(request, 'signin.html', {'message':"Username already taken"})
 
 
 
     return render(request, 'signin.html')
+
+#!+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+# Certificate
+@login_required
+def home(request):
+    return render(request, 'index.html')
+
 

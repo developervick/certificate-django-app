@@ -6,15 +6,15 @@
 		<div class="container">
 			<div class="row justify-content-center">
 				<div class="col-md-6 text-center mb-5">
-					<h2 class="heading-section">Log In</h2>
+					<h2 class="heading-section">Sign In</h2>
 				</div>
 			</div>
 			<div class="row justify-content-center">
 				<div class="col-md-6 col-lg-4">
 					<div class="login-wrap p-0">
-		      	<a href="{% url 'signin' %}" class="mb-4 text-center">Create account?</a>
-				
-		      	<form action="{% url 'login' %}" method='POST' class="signin-form">
+		      	<a href="{% url 'login' %}" class="mb-4 text-center">Have an account?</a>
+			
+		      	<form action="{% url 'signin' %}" method='POST' class="signin-form">
 					{% csrf_token %}
 					<h6 style="color: red;">{{message}}</h6>
 		      		<div class="form-group">
@@ -25,7 +25,7 @@
 	            	  <span toggle="#password-field" class="fa fa-fw fa-eye field-icon toggle-password"></span>
 	            	</div>
 	            	<div class="form-group">
-	            		<button type="submit" class="form-control btn btn-primary submit px-3">Log In</button>
+	            		<button type="submit" class="form-control btn btn-primary submit px-3">Sign In</button>
 	            	</div>
 	            	<div class="form-group d-md-flex">
 	            		<div class="w-50">
@@ -51,4 +51,3 @@
 	</section>
 
 {% endblock %}
-
