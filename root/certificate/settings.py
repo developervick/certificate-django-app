@@ -78,6 +78,8 @@ TEMPLATES = [
     },
 ]
 
+AUTH_USER_MODEL = 'base.User'
+
 WSGI_APPLICATION = 'certificate.wsgi.application'
 
 
