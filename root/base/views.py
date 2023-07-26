@@ -2,12 +2,14 @@ from django.shortcuts import render, HttpResponse, redirect
 from django.http import request
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import login, logout, authenticate
-from .forms import authform, certificate_form, certificate_id_form
+from .forms import authform, certificate_form
 from .models import User, certificate_model
 from django.db.utils import IntegrityError
+from django.db.models import Model
 import uuid
 
 #!++++++++++++++++++++++++++++++++++++++++---  AUTHENTICATION VIEWS ----++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
 def login_view(request):
 
     if request.method == "POST":
@@ -74,5 +76,12 @@ def validate(request):
 
     if request.method == 'GET':
         id = request.GET.get('certificate_id', False)
-    
-    return render(request, 'validate.html', {'message':id})
+        if id:
+            try:
+                certificate_model.objects.get(certificate_id=id)
+                return render(request, "validate.html", {'message':"Congartulations You have Valid Certificate"})
+            except:
+                return render(request, 'validate.html', {'message':"No certificate Issued with this Id"} )
+
+
+    return render(request, 'validate.html')
