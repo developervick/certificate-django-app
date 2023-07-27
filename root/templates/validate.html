@@ -1,13 +1,21 @@
 {% extends 'layout.html' %}
-{% load static %}
 
 {% block content %}
-<h2>Validate Certificate</h2>
-<h3>{{message}}</h3>
-<form action="{% url 'validate' %}" method="get">
-    <label for="certificate_id" style="color: black;">Certificate ID</label>
-    <input name="certificate_id" type="text">
-    <input type="submit">
-</form>
+
+<div class="bg-white">
+
+    <h1>validate</h1>
+
+    {{message}}
+    <form class="" action="{% url 'validate' %}" method="get">
+"
+        <label for="certificate_id" >Certificate ID</label>
+        <input name="certificate_id" type="text">
+        <input type="submit">
+    </form>
+
+</div>
+
+
 
 {% endblock %}

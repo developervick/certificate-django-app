@@ -28,6 +28,8 @@ DEBUG = True
 
 ALLOWED_HOSTS = ['localhost', '192.168.175.90']
 
+INTERNAL_IPS = ["127.0.0.1",]
+
 
 # Application definition
 
@@ -41,9 +43,11 @@ INSTALLED_APPS = [
 
     # installed apps
     'base',
-
+    
     # development only
     "django_browser_reload",
+    "tailwind",
+    "theme",
 ]
 
 
@@ -58,6 +62,7 @@ MIDDLEWARE = [
 
     # development only
     "django_browser_reload.middleware.BrowserReloadMiddleware",
+    
 ]
 
 ROOT_URLCONF = 'certificate.urls'
@@ -136,3 +141,7 @@ STATICFILES_DIRS = [ BASE_DIR / 'static' ]
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+TAILWIND_APP_NAME = 'theme'
+
+NPM_BIN_PATH = "C:\\Users\\vicky\\AppData\\Roaming\\npm\\npm.cmd"

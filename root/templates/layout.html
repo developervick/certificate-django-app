@@ -1,4 +1,6 @@
 {% load static %}
+{% load static tailwind_tags %}
+
 <!doctype html>
 <html lang="en">
   <head>
@@ -11,9 +13,11 @@
 	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
 	
 	<link rel="stylesheet" href="{% static 'css/style.css' %}">
+	{% tailwind_css %}
+	
 
 	</head>
-	<body class="img js-fullheight" style="background-image: url({% static 'images/bg.jpg' %});">
+	<body class="" style="background-image: url();">
 		{% block content %}
 
         {% endblock %}
