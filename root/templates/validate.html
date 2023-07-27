@@ -2,18 +2,33 @@
 
 {% block content %}
 
-<div class="bg-white">
+<div class="grid grid-cols-1 md:grid-cols-9">
 
-    <h1>validate</h1>
 
-    {{message}}
-    <form class="" action="{% url 'validate' %}" method="get">
-"
-        <label for="certificate_id" >Certificate ID</label>
-        <input name="certificate_id" type="text">
-        <input type="submit">
-    </form>
+    <div class="col-start-3 col-span-5 p-4 min-h-screen flex flex-col">
+        <div class="flex flex-col justify-start w-fit self-center">
+            <h1 class=" m-2 text-4xl font-bold w-fit text-gray-700 ">Validate Your Certificate</h1>
 
+            <div class="justify-self-center mx-2 mt-2 p-1 self-center">
+                <h5 class="text-green-500">{{message}}</h5>
+                <form class="self-center justify-center flex h-[50px] py-2" action="{% url 'validate' %}" method="get">
+                    <label class="text-lg mr-2" for="certificate">Certificate ID</label>
+                    <input class="h-full rounded-sm pt-1" name="certificate_id" type="text" placeholder="Paste certificate Id">
+                    <button class="rounded-sm bg-green-400 hover:bg-green-500 focus:bg-green-600 mx-3 px-4 h-full text-white" type="submit">Validate</button>
+                </form>
+            </div>
+            <div class="mx-2 p-1 self-start">
+                {% if cert %}
+                <h3>Name:  {{cert.name}}</h3>
+                <h3>Signed By: {{cert.signed_by}}</h3>
+                {% endif %}
+            </div>
+            <a href="{% url 'certi' %}">
+                <button class="px-4 mx-3 mt-5 h-[38px] bg-blue-500 hover:bg-blue-600 focus:bg-blue-700 self-start text-white rounded-sm" >Create New Certificate<button/>
+            </a>
+            
+        </div>
+    </div>
 </div>
 
 

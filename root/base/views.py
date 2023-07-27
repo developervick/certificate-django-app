@@ -54,7 +54,7 @@ def signin(request):
 def home(request):
     return render(request, 'index.html')
 
-
+@login_required(login_url="login")
 def certificate(request):
 
     if request.method == "POST":
@@ -78,8 +78,9 @@ def validate(request):
         id = request.GET.get('certificate_id', False)
         if id:
             try:
-                certificate_model.objects.get(certificate_id=id)
-                return render(request, "validate.html", {'message':"Congartulations You have Valid Certificate"})
+                cert = certificate_model.objects.get(certificate_id=id)
+                return render(request, "validate.html", {'message':"Congartulations You have Valid Certificate",
+                                                         'cert':cert})
             except:
                 return render(request, 'validate.html', {'message':"No certificate Issued with this Id"} )
 
