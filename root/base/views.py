@@ -1,7 +1,7 @@
 from django.shortcuts import render, HttpResponse, redirect
 from django.http import request
 from django.contrib.auth.decorators import login_required
-from django.contrib.auth import login, logout, authenticate
+from django.contrib.auth import login, logout, authenticate, get_user
 from .forms import authform, certificate_form
 from .models import User, certificate_model
 from django.db.utils import IntegrityError
@@ -11,18 +11,24 @@ import uuid
 #!++++++++++++++++++++++++++++++++++++++++---  AUTHENTICATION VIEWS ----++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 def login_view(request):
-
+    user = get_user(request)
     if request.method == "POST":
         username = request.POST['username']
         password = request.POST['password']
         user = authenticate(request, username=username, password=password)
         if user is not None:
             login(request, user)
-            return redirect(home)
+            return redirect(certificate)
         else:
             return render(request, 'login.html', {'message':'Invalid user or password'})
+
     else:
-        return render(request, 'login.html')
+        if authenticate(user):
+            return redirect(certificate)
+        else:
+            return render(request, 'login.html')
+        
+    
 
 
 def logout_view(request):
@@ -65,7 +71,7 @@ def certificate(request):
             certificate_id = uuid.uuid4()
             cert = certificate_model(name=name, signed_by=signed_by, certificate_id=certificate_id)
             cert.save()
-            return render(request, 'certificate.html', {'message':'certificate Succesfully created',
+            return render(request, 'certificate.html', {'message':'Certificate Succesfully created',
                                                         'certificate_id':certificate_id})
         else:
             return render(request, 'certificate.html', {'message':'some error occured'})
