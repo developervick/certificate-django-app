@@ -7,18 +7,18 @@
 
     <div class="col-start-3 col-span-5 p-4 min-h-screen flex flex-col">
         <div class="flex flex-col justify-start w-fit self-center">
-            <h1 class=" m-2 text-4xl font-bold w-fit text-gray-700 ">Validate Your Certificate</h1>
+            <h1 class=" m-2 text-center text-4xl font-bold text-gray-700 ">Validate Your Certificate</h1>
 
             <div class="justify-self-center mx-2 mt-2 p-1 self-center">
                 <h5 class="text-green-500">{{message}}</h5>
-                <form class="self-center justify-center flex h-[50px] py-2" action="{% url 'validate' %}" method="get">
+                <form class="self-center justify-center flex flex-col md:flex-row h-[50px] py-2" action="{% url 'validate' %}" method="get">
                     <label class="text-lg mr-2" for="certificate">Certificate ID</label>
                     <input class="h-full rounded-sm pt-1" name="certificate_id" type="text" placeholder="Paste certificate Id">
                     <button class="rounded-sm bg-green-400 hover:bg-green-500 focus:bg-green-600 mx-3 px-4 h-full text-white" type="submit">Validate</button>
                 </form>
             </div>
             <div>
-                <canvas id="canvas" class="m-3" width="500px" height="300px"></canvas>
+                <canvas id="canvas" class="m-3" width="800px" height="600px"></canvas>
             </div>
             <div class="mx-2 p-1 self-start">
                 {% if cert %}
@@ -37,19 +37,42 @@
 
 {% block script %}
     <script type="text/javascript">
-
         function image(){
-            canvas = document.querySelector('canvas')
-            ctx = canvas.getContext('2d')
-            let img = new Image(100,100)
+            let width = 700
+            let height = 560
+            console.log("image func called")
+            var img = new Image(100,100)
             img.src = "{% static '../static/images/certi1.jpeg' %}"
-            console.log(img)
-            ctx.drawImage(img, 5, 5)
-            ctx.font = "40pt Calibri"
-            ctx.fillText("hello", 0,0)
+            img.width = 300
+            img.height = 300
+            if (window.matchMedia("(max-width: 480px)").matches){
+               width = window.innerWidth - 100
+               height = window.innerWidth -100
+            }
+            console.log(width, height)
+            canvas = document.querySelector('canvas')
+            canvas.width = width
+            canvas.height = height
+            ctx = canvas.getContext('2d')
+            var hRatio = canvas.width  / img.width;
+            var vRatio =  canvas.height / img.height;
+            var ratio  = Math.min ( hRatio, vRatio );
+            var centerShift_x = ( canvas.width - img.width) / 2;
+            var centerShift_y = ( canvas.height - img.height) / 2; 
 
+            ctx.clearRect(0,0,canvas.width, canvas.height);
+            ctx.drawImage(img, 0,0, width, height);
+            //ctx.font = "20px Arial";
+            //ctx.fillText("{{cert.name}}", width, height)
         }
+        
 
-        window.onload(image())
+        function viewPortSize(){
+            return {"width":window.innerWidth, "height": window.innerHeight}
+        }
+        
+        window.onload = image()
+        console.log(viewPortSize().width)
+
     </script>
 {% endblock %}

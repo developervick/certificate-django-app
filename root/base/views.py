@@ -92,3 +92,9 @@ def validate(request):
 
 
     return render(request, 'validate.html')
+
+def download(request):
+
+    id = request.POST.get("certificate_id", False)
+    if id:
+        ...

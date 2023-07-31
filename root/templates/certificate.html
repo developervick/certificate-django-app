@@ -6,51 +6,119 @@
 <div class="grid grid-cols-1 md:grid-cols-9">
 
 
-    <div class="col-start-2 col-span-7 p-4 min-h-screen flex flex-col">
-        <div class="flex flex-col justify-start w-full self-center bg-zinc-200">
-            <h1 class=" m-2 text-4xl font-bold w-fit text-gray-700 ">Create Your Certificate</h1>
+    <div  class="col-start-2 col-span-7 p-4 min-h-screen flex flex-col">
+        
+        <div class="flex flex-col md:flex-row justify-center w-full self-center bg-white">
+            <div class="flex flex-col">
+                <h1 class=" m-2 text-4xl font-bold w-fit text-gray-700 ">Create Your Certificate</h1>
 
-            <div class="justify-self-start flex flex-col mx-2 mt-2 p-1 self-start">
-                <form class="flex flex-col m-2" action="{% url 'certi' %}" method="post">
-                    {% csrf_token %}
-                    <label class="text-lg" for="name">Name on Certificate</label>
-                    <input class="mb-2 h-[34px] rounded-sm p-2" name="name" type="text" placeholder="Name">
-                    <label class="text-lg" for="signed_by">Signed By</label>
-                    <input class="mb-4 h-[34px] rounded-sm p-2" name="signed_by" type="text" placeholder="Signee">
-                    <button class="rounded-sm bg-green-500 hover:bg-green-600 focus:bg-green-500 mx-3 px-4 h-[38px]   text-white" type="submit">Generate Certificate</button>
-                </form>
-            </div>
-            <h5 class="text-green-500 mx-2">{{message}}</h5>
-            {% if certificate_id %}
-                <h1 class="mx-2">Your Certificate ID {{certificate_id}}</h1>
-            {% endif %}
-            <div>
-                
-            </div>
-            <div class="mx-2 p-1 self-start">
-                {% if cert %}
-                <h3>Name:  {{cert.name}}</h3>
-                <h3>Signed By: {{cert.signed_by}}</h3>
+                <div class="justify-self-start flex flex-col mx-2 mt-2 p-1 self-start bg-red-200">
+                    <form class="flex flex-col m-2" action="{% url 'certi' %}" method="post">
+                        {% csrf_token %}
+                        <label class="text-lg" for="name">Name on Certificate</label>
+                        <input id="name" class="mb-2 h-[34px] rounded-sm p-2" name="name" type="text" placeholder="Name">
+                        <label class="text-lg" for="signed_by">Signed By</label>
+                        <input id="sighnee" class="mb-4 h-[34px] rounded-sm p-2" name="signed_by" type="text" placeholder="Signee">
+                        <button id="generate" class="rounded-sm bg-green-500 hover:bg-green-600 focus:bg-green-500 mx-3 px-4 h-[38px]   text-white" type="submit">Generate Certificate</button>
+                    </form>
+                </div>
+                <h5 class="text-green-500 mx-2">{{message}}</h5>
+                {% if certificate_id %}
+                    <h1 class="mx-2">Your Certificate ID {{certificate_id}}</h1>
                 {% endif %}
+                <div>
+
+                </div>
+                <div class="mx-2 p-1 self-start">
+                    {% if cert %}
+                    <h3>Name:  {{cert.name}}</h3>
+                    <h3>Signed By: {{cert.signed_by}}</h3>
+                    {% endif %}
+                </div>
+                <a href="{% url 'validate' %}">
+                    <button class="px-4 mx-3 mt-5 h-[38px] w-fit bg-blue-500 hover:bg-blue-600 focus:bg-blue-700 self-start text-white rounded-sm" >Validate Certificate<button/>
+                </a>
+                <a href="{% url 'logout' %}">Logout</a>
+                <button id="download" onclick=download()>Download<button>
             </div>
-            <a href="{% url 'validate' %}">
-                <button class="px-4 mx-3 mt-5 h-[38px] bg-blue-500 hover:bg-blue-600 focus:bg-blue-700 self-start text-white rounded-sm" >Validate Certificate<button/>
-            </a>
-            <a href="{% url 'logout' %}">Logout</a>
+            <div id="can-box" class="mt-2">
+                <canvas id="canvas" width="800px" height="600px" ></canvas>
+            </div>
         </div>
     </div>
 </div>
 
+{% endblock %}
+
+{% block script %}
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/1.3.3/jspdf.min.js"></script>
+<script type="text/javascript" defer>
+
+    function image(value){
+        let width = 400
+        let height = 360
+        console.log("image func called")
+        var img = new Image(100,100)
+        img.src = "{% static '../static/images/certi1.jpeg' %}"
+        if (window.innerWidth < 500 ){
+           width = window.innerWidth - 100
+           height = window.innerWidth -100
+        }
+        console.log(window.innerWidth)
+        console.log(width, height)
+        canvas = document.querySelector('canvas')
+        canvas.width = width
+        canvas.height = height
+        ctx = canvas.getContext('2d')
+        //ctx.fillStyle = `${document.querySelector("col").style.backgroundColor}`
+        ctx.fillRect(0,0, width, height)
+        var hRatio = canvas.width  / img.width;
+        var vRatio =  canvas.height / img.height;
+        var ratio  = Math.min ( hRatio, vRatio );
+        var centerShift_x = ( canvas.width - img.width) / 2;
+        var centerShift_y = ( canvas.height - img.height) / 2; 
+        ctx.clearRect(0,0,canvas.width, canvas.height);
+        ctx.drawImage(img, 0,0, width, height);
+        ctx.font = "20px Arial";
+        ctx.fillText(`${value}`, 155, 155)
+    }
 
 
+    function passInput(){
+        userInput = document.querySelector("#name")
+        userInput.addEventListener("input", function(){
+            image(userInput.value)
+        })
+
+       downloadPdf = document.querySelector("#download")
+       downloadPdf.addEventListener("click", function(){
+            img = download()
+            let pdf = new jsPDF()
+            pdf.addImage(img, "JPEG", 0, 0)
+            pdf.save("certificate.pdf")
+       })
+    }
 
 
-{% if certificate_id %}
-    <h1>Your Certificate ID {{certificate_id}}</h1>
-{% endif %}
+    function download(){
+        console.log("download")
+        canvas = document.querySelector("#canvas")
+        canvas = canvas.toDataURL("JPEG", 1.0)
+        console.log(canvas, "cnavas data")
+        //link = document.createElement('a')
+        //link.download = "certificate"
+        //link.href = canvas
+        //link.innerHTML = "Download"
+        //link.id = "download"
 
+        //canBox = document.querySelector("#can-box")
+        //canBox.appendChild(link)
 
+        return canvas
+    }
 
+    window.onload = passInput()
 
+</script>
 {% endblock %}
 
