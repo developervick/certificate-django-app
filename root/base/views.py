@@ -72,7 +72,7 @@ def certificate(request):
             cert = certificate_model(name=name, signed_by=signed_by, certificate_id=certificate_id)
             cert.save()
             return render(request, 'certificate.html', {'message':'Certificate Succesfully created',
-                                                        'certificate_id':certificate_id})
+                                                        'certificate_id':certificate_id, 'name':name, "signed_by":signed_by})
         else:
             return render(request, 'certificate.html', {'message':'Enter both values'})
 

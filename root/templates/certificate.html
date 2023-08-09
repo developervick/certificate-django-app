@@ -8,7 +8,7 @@
 
     <div  class="col-start-2 col-span-7 p-4 min-h-screen flex flex-col">
         
-        <div class="flex flex-col p-2 md:flex-row justify-center w-full self-center bg-amber-300 bg-opacity-25">
+        <div class="flex flex-col p-2 md:flex-row justify-around w-full self-center bg-amber-300 bg-opacity-25">
             <div class="flex flex-col">
                 <h1 class=" m-2 text-4xl font-bold w-fit text-black ">Create Your Certificate</h1>
 
@@ -19,7 +19,7 @@
                         <input id="name" class="mb-2 h-[34px] rounded-sm p-2" name="name" type="text" placeholder="Type your name">
                         <label class="text-lg text-black" for="signed_by">Signed By</label>
                         <input id="sighnee" class="mb-4 h-[34px] rounded-sm p-2" name="signed_by" type="text" placeholder="Type Signee name">
-                        <button id="generate" class="rounded-sm bg-green-500 hover:bg-green-600 focus:bg-green-500 mx-3 px-4 h-[38px]   text-white" type="submit">Generate Certificate</button>
+                        <button id="generate" onclick=download() class="rounded-sm bg-green-500 hover:bg-green-600 focus:bg-green-500 mx-3 px-4 h-[38px]   text-white" type="submit">Generate Certificate</button>
                     </form>
                 </div>
                 {% if message %}
@@ -44,9 +44,8 @@
                 <a  href="{% url 'logout' %}">
                     <button class="px-4 mx-1 mt-2 h-[38px] w-fit bg-amber-500 hover:bg-amber-600 focus:bg-amber-700 self-start text-white rounded-sm" >Logout</button>
                 </a>
-                <button class="px-4 mx-1 mt-2 h-[38px] w-fit bg-amber-500 hover:bg-amber-600 focus:bg-amber-700 self-start text-white rounded-sm" id="download" onclick=download()>Download<button>
             </div>
-            <div id="can-box" class="mt-2">
+            <div id="can-box" class="mt-4">
                 <canvas id="canvas" class=" border-2 border-black w-[465px] h-[400px] " width="1920px" height="1080px" ></canvas>
             </div>
         </div>
@@ -61,11 +60,8 @@
     function image(value1="Your Name", value2 = "signee name"){
         let width = 1080
         let height = 720
-        console.log("image func called")
         var img = new Image(100,100)
         img.src = "{% static '../static/images/certi1.jpeg' %}"
-        console.log(window.innerWidth)
-        console.log(width, height)
         canvas = document.querySelector('canvas')
         canvas.width = width
         canvas.height = height
@@ -91,9 +87,10 @@
     }
 
     function main(){
-        image()
-        value1= "Your name"
-        value2 = "Signee name"
+        console.log("main image")
+        image("{{ cert.name }}","{{ cert.signed_by }}")
+        value1= "{{cert.name}}"
+        value2 = "{{cert.signed_by}}"
         userName = document.querySelector("#name")
         userName.addEventListener("input", function(){
             value1 = userName.value
@@ -105,7 +102,7 @@
             image(value1 = value1, value2 = signee.value)
         })
 
-       downloadPdf = document.querySelector("#download")
+       downloadPdf = document.querySelector("#generate")
        downloadPdf.addEventListener("click", function(){
             img = download()
             let pdf = new jsPDF({
