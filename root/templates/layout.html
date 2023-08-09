@@ -12,20 +12,21 @@
 
 	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
 	
-	 <!-- <link rel="stylesheet" href="{% static 'css/style.css' %}"> --> 
+	 <link rel="stylesheet" href="{% static 'css/style.css' %}">
 	{% tailwind_css %}
 	
 
 	</head>
-	<body class="bg-bg">
+	<body class="w-full bg-gradient-to-r from-cyan-500 to-violet-500">
 		{% block content %}
 
         {% endblock %}
-	<script type="text/javascript" src="js/jquery.min.js"></script>
-  	<script type="text/javascript" src="js/popper.js"></script>
-  	<script type="text/javascript" src="js/bootstrap.min.js"></script>
+	
 
 	{% block script %}
+	<script type="text/javascript" src="{% static 'js/jquery.min.js' %}"></script>
+  	<script type="text/javascript" src="{% static 'js/popper.js' %}"></script>
+  	<script type="text/javascript" src="{% static 'js/bootstrap.min.js' %}"></script>
 	{% endblock %}
 	</body>
 </html>

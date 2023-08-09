@@ -7,27 +7,35 @@
 
     <div class="col-start-3 col-span-5 p-4 min-h-screen flex flex-col">
         <div class="flex flex-col justify-start w-fit self-center">
-            <h1 class=" m-2 text-center text-4xl font-bold text-gray-700 ">Validate Your Certificate</h1>
+            <h1 class=" m-2 text-center text-4xl font-bold text-gray-800 ">Validate Your Certificate</h1>
 
             <div class="justify-self-center mx-2 mt-2 p-1 self-center">
-                <h5 class="text-green-500">{{message}}</h5>
+                {% if message %}
+                    <h5 class="text-green-600 p-2 w-fit border-2 rounded-sm border-green-200 bg-green-50">{{message}}</h5>
+
+                {% endif %}
                 <form class="self-center justify-center flex flex-col md:flex-row h-[50px] py-2" action="{% url 'validate' %}" method="get">
-                    <label class="text-lg mr-2" for="certificate">Certificate ID</label>
+                    <label class="text-lg text-black mr-2" for="certificate">Certificate ID</label>
                     <input class="h-full rounded-sm pt-1" name="certificate_id" type="text" placeholder="Paste certificate Id">
                     <button class="rounded-sm bg-green-400 hover:bg-green-500 focus:bg-green-600 mx-3 px-4 h-full text-white" type="submit">Validate</button>
                 </form>
             </div>
             <div>
-                <canvas id="canvas" class="m-3" width="800px" height="600px"></canvas>
+                <canvas id="canvas" class="m-3 w-[400px] h-[300px]" width="800px" height="600px"></canvas>
             </div>
-            <div class="mx-2 p-1 self-start">
-                {% if cert %}
-                <h3>Name:  {{cert.name}}</h3>
-                <h3>Signed By: {{cert.signed_by}}</h3>
-                {% endif %}
+            {% if cert %}
+            <div class="mx-2 p-2 opacity-75 bg-white self-start">
+                <div>
+                    <h3 class="text-black">Name:  {{cert.name}}</h3>
+                    <h3 class="text-black">Signed By: {{cert.signed_by}}</h3>
+                </div>
             </div>
+            {% endif %}
             <a href="{% url 'certi' %}">
-                <button class="px-4 mx-3 mt-5 h-[38px] bg-blue-500 hover:bg-blue-600 focus:bg-blue-700 self-start text-white rounded-sm" >Create New Certificate<button/>
+                <button class="px-2 mx-1 mt-1 h-[38px] bg-amber-500 hover:bg-amber-600 focus:bg-amber-700 self-start text-white rounded-sm" >Create New Certificate<button/>
+            </a>
+            <a  href="{% url 'logout' %}">
+                <button class="px-4 mx-1 mt-2 h-[38px] w-fit bg-amber-500 hover:bg-amber-600 focus:bg-amber-700 self-start text-white rounded-sm" >Logout</button>
             </a>
         </div>
     </div>
@@ -36,19 +44,14 @@
 {% endblock %}
 
 {% block script %}
+
     <script type="text/javascript">
-        function image(){
+        function image(value1, value2){
             let width = 700
             let height = 560
             console.log("image func called")
             var img = new Image(100,100)
             img.src = "{% static '../static/images/certi1.jpeg' %}"
-            img.width = 300
-            img.height = 300
-            if (window.matchMedia("(max-width: 480px)").matches){
-               width = window.innerWidth - 100
-               height = window.innerWidth -100
-            }
             console.log(width, height)
             canvas = document.querySelector('canvas')
             canvas.width = width
@@ -62,17 +65,17 @@
 
             ctx.clearRect(0,0,canvas.width, canvas.height);
             ctx.drawImage(img, 0,0, width, height);
-            //ctx.font = "20px Arial";
-            //ctx.fillText("{{cert.name}}", width, height)
+            ctx.font = "30px Arial";
+            ctx.fillText(`${value1}`, 260, 250)
+            ctx.font = "30px Arial"
+            ctx.fillText(`${value2}`, 430, 400)
         }
-        
 
-        function viewPortSize(){
-            return {"width":window.innerWidth, "height": window.innerHeight}
+        function main(){
+            image('{{cert.name}}', '{{cert.signed_by}}')
         }
-        
-        window.onload = image()
-        console.log(viewPortSize().width)
+
+        window.onload = main()
 
     </script>
 {% endblock %}

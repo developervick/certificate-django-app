@@ -43,9 +43,7 @@ module.exports = {
     ],
     theme: {
         extend: {
-            backgroundImage: {
-                'bg': "url('../static/img/bg.jpg')",
-              }
+
         },
     },
     plugins: [

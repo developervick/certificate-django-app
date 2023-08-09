@@ -74,7 +74,7 @@ def certificate(request):
             return render(request, 'certificate.html', {'message':'Certificate Succesfully created',
                                                         'certificate_id':certificate_id})
         else:
-            return render(request, 'certificate.html', {'message':'some error occured'})
+            return render(request, 'certificate.html', {'message':'Enter both values'})
 
     return render(request, 'certificate.html')
 
